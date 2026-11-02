@@ -1,840 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SYS://RAIF</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raif Fahmi – Software Engineer</title>
+<meta name="description" content="Portfolio Raif Fahmi, Software Engineer lulusan S1 Teknik Informatika UNIKOM. Web development dan AI automation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:      #020b04;
-  --bg2:     #041008;
-  --bg3:     #061410;
-  --neon:    #00ff41;
-  --neon2:   #39ff14;
-  --neon-dim: rgba(0,255,65,0.12);
-  --neon-glow: rgba(0,255,65,0.05);
-  --lime:    #a8ff3e;
-  --amber:   #ffd700;
-  --fg:      #b8d4b0;
-  --muted:   #2e5c38;
-  --border:  rgba(0,255,65,0.15);
-  --border-dim: rgba(0,255,65,0.06);
+  --bg: #fbfbfa;
+  --fg: #1c1f23;
+  --muted: #5d6570;
+  --line: #e3e5e8;
+  --accent: #1f5fbf;
 }
-
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --fg: #e8eaed;
+    --muted: #9aa3ad;
+    --line: #2a2e35;
+    --accent: #7db0ff;
+  }
+}
+* { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-
 body {
+  margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font-family: 'Rajdhani', sans-serif;
-  overflow-x: hidden;
-  cursor: none;
+  font: 400 17px/1.65 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-
-body::before {
-  content:'';
-  position:fixed; inset:0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.1) 2px,
-    rgba(0,0,0,0.1) 4px
-  );
-  pointer-events:none;
-  z-index:9000;
-}
-
-.hud-cur {
-  position:fixed; pointer-events:none;
-  z-index:9999;
-  transform:translate(-50%,-50%);
-}
-.cur-ring {
-  position:fixed; pointer-events:none;
-  z-index:9998;
-  width:36px; height:36px;
-  border:1px solid rgba(0,255,65,0.35);
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-  transition: left .12s ease-out, top .12s ease-out, width .2s, height .2s;
-}
-
-.corner { position:fixed; width:52px; height:52px; pointer-events:none; z-index:50; }
-.corner::before,.corner::after { content:''; position:absolute; background: var(--neon); opacity:0.3; }
-.corner::before { width:1px; height:100%; }
-.corner::after  { width:100%; height:1px; }
-.c-tl { top:14px; left:14px; }
-.c-tr { top:14px; right:14px; transform:scaleX(-1); }
-.c-bl { bottom:14px; left:14px; transform:scaleY(-1); }
-.c-br { bottom:14px; right:14px; transform:scale(-1); }
-
-nav {
-  position:fixed; top:0; left:0; right:0;
-  z-index:200; height:56px;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 40px;
-  border-bottom:1px solid var(--border-dim);
-  background: rgba(2,11,4,0.88);
-  backdrop-filter: blur(16px);
-}
-.nav-logo {
-  font-family:'Orbitron',monospace;
-  font-size:13px; font-weight:700;
-  color:var(--neon); letter-spacing:3px;
-  display:flex; align-items:center; gap:10px;
-  text-decoration:none;
-}
-.nav-logo::before {
-  content:'';
-  width:7px; height:7px; border-radius:50%;
-  background:var(--neon);
-  box-shadow:0 0 10px var(--neon), 0 0 20px var(--neon);
-  animation:blink 1.6s ease-in-out infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
-
-.nav-links { display:flex; gap:6px; }
-.nav-links a {
-  font-family:'Share Tech Mono',monospace;
-  font-size:11px; letter-spacing:2px;
-  color:var(--muted);
-  text-decoration:none; padding:6px 14px;
-  border:1px solid transparent;
-  text-transform:uppercase;
-  transition:all .25s;
-}
-.nav-links a:hover, .nav-links a.active {
-  color:var(--neon); border-color:var(--border);
-  background:var(--neon-glow);
-  text-shadow:0 0 8px rgba(0,255,65,.5);
-}
-.sys-clock {
-  font-family:'Share Tech Mono',monospace;
-  font-size:11px; letter-spacing:2px; color:var(--muted);
-}
-
-#hero {
-  min-height:100vh; padding:56px 0 0;
-  display:grid; grid-template-rows:1fr auto;
-  position:relative; overflow:hidden;
-}
-#hero::after {
-  content:''; position:absolute; inset:0;
-  background-image:
-    linear-gradient(var(--border-dim) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border-dim) 1px, transparent 1px);
-  background-size:56px 56px;
-  mask-image:radial-gradient(ellipse 80% 80% at 50% 40%, black 0%, transparent 100%);
-  pointer-events:none;
-}
-
-.hero-main {
-  display:flex; flex-direction:column;
-  justify-content:center;
-  padding:80px 40px 40px;
-  position:relative; z-index:1;
-}
-
-.sys-path {
-  font-family:'Share Tech Mono',monospace;
-  font-size:11px; color:var(--muted);
-  letter-spacing:2px; margin-bottom:28px;
-  display:flex; align-items:center; gap:6px;
-}
-.sys-path .hi { color:var(--neon); }
-
-.boot-tag {
-  font-family:'Share Tech Mono',monospace;
-  font-size:11px; letter-spacing:4px;
-  color:var(--neon); opacity:.7;
-  text-transform:uppercase; margin-bottom:20px;
-}
-
-.hero-name {
-  font-family:'Orbitron',monospace;
-  font-size:clamp(44px,7.5vw,108px);
-  font-weight:900; line-height:.92;
-  letter-spacing:-1px; color:var(--fg);
-}
-.hero-name .glitch {
-  position:relative; color:var(--neon);
-  text-shadow:0 0 20px rgba(0,255,65,.45), 0 0 60px rgba(0,255,65,.15);
-}
-.hero-name .glitch::before,
-.hero-name .glitch::after {
-  content:attr(data-text);
-  position:absolute; top:0; left:0; width:100%;
-}
-.hero-name .glitch::before {
-  color:var(--amber); animation:g1 4s infinite;
-  clip-path:polygon(0 0,100% 0,100% 32%,0 32%);
-}
-.hero-name .glitch::after {
-  color:var(--lime); animation:g2 4s infinite;
-  clip-path:polygon(0 68%,100% 68%,100% 100%,0 100%);
-}
-@keyframes g1 {
-  0%,88%,100%{transform:translate(0)}
-  90%{transform:translate(-4px,1px)}
-  92%{transform:translate(4px,-1px)}
-  94%{transform:translate(-2px,0)}
-}
-@keyframes g2 {
-  0%,88%,100%{transform:translate(0)}
-  91%{transform:translate(4px,2px)}
-  93%{transform:translate(-4px,-1px)}
-  95%{transform:translate(2px,0)}
-}
-
-.hero-role {
-  font-family:'Share Tech Mono',monospace;
-  font-size:13px; letter-spacing:4px;
-  color:var(--muted); text-transform:uppercase;
-  margin:22px 0 36px;
-  display:flex; align-items:center; gap:14px;
-}
-.hero-role::before { content:''; width:36px; height:1px; background:var(--muted); }
-
-.hero-desc {
-  font-size:16px; font-weight:300;
-  color:#3d6645; max-width:480px;
-  line-height:1.85; margin-bottom:44px;
-}
-.hero-desc strong { color:var(--fg); font-weight:500; }
-.hero-desc em { color:var(--neon); font-style:normal; }
-
-.hero-btns { display:flex; gap:14px; }
-.btn {
-  font-family:'Share Tech Mono',monospace;
-  font-size:12px; letter-spacing:2px;
-  text-transform:uppercase; text-decoration:none;
-  padding:13px 28px; border:1px solid var(--border);
-  color:var(--neon); background:var(--neon-glow);
-  position:relative; overflow:hidden; transition:all .3s;
-  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-}
-.btn::before {
-  content:''; position:absolute; inset:0;
-  background:var(--neon);
-  transform:translateX(-101%);
-  transition:transform .35s cubic-bezier(.7,0,.3,1);
-}
-.btn:hover::before { transform:translateX(0); }
-.btn:hover { color:var(--bg); box-shadow:0 0 24px rgba(0,255,65,.3); }
-.btn span { position:relative; z-index:1; }
-.btn.ghost { background:transparent; color:var(--muted); border-color:var(--border-dim); }
-.btn.ghost::before { background:var(--neon-dim); }
-.btn.ghost:hover { color:var(--neon); border-color:var(--border); box-shadow:none; }
-
-.hero-stats {
-  display:grid; grid-template-columns:repeat(4,1fr);
-  border-top:1px solid var(--border-dim);
-  position:relative; z-index:1;
-}
-.hs {
-  padding:22px 32px;
-  border-right:1px solid var(--border-dim);
-  position:relative; transition:background .3s;
-}
-.hs:last-child { border-right:none; }
-.hs:hover { background:var(--neon-glow); }
-.hs::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:2px;
-  background:linear-gradient(90deg, var(--neon), transparent);
-  opacity:0; transition:opacity .3s;
-}
-.hs:hover::before { opacity:1; }
-.hs-val {
-  font-family:'Orbitron',monospace;
-  font-size:26px; font-weight:700;
-  color:var(--fg); line-height:1; margin-bottom:6px;
-}
-.hs-val .u { font-size:14px; color:var(--neon); }
-.hs-key {
-  font-family:'Share Tech Mono',monospace;
-  font-size:9px; letter-spacing:2.5px;
-  color:var(--muted); text-transform:uppercase;
-}
-
-.sec { padding:100px 40px; border-top:1px solid var(--border-dim); position:relative; }
-.sec-hud { display:flex; align-items:center; gap:14px; margin-bottom:60px; }
-.sec-br { font-family:'Share Tech Mono',monospace; font-size:13px; color:var(--neon); opacity:.4; }
-.sec-num { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--neon); letter-spacing:3px; }
-.sec-title {
-  font-family:'Orbitron',monospace;
-  font-size:clamp(20px,3vw,34px);
-  font-weight:700; letter-spacing:3px;
-  color:var(--fg); text-transform:uppercase;
-}
-.sec-line { flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
-.sec-tag {
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px; letter-spacing:2px;
-  color:var(--muted); padding:5px 12px;
-  border:1px solid var(--border-dim);
-}
-
-.about-layout {
-  display:grid; grid-template-columns:1.2fr 1fr;
-  gap:60px; align-items:start;
-}
-.about-text { font-size:16px; font-weight:300; color:#3d6645; line-height:1.9; }
-.about-text strong { color:var(--fg); font-weight:500; }
-.about-text em { color:var(--neon); font-style:normal; }
-.about-text p+p { margin-top:18px; }
-
-.terminal {
-  border:1px solid var(--border);
-  background:var(--bg2);
-  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);
-}
-.term-bar {
-  padding:10px 16px;
-  border-bottom:1px solid var(--border-dim);
-  background:rgba(0,255,65,.04);
-  display:flex; align-items:center; gap:8px;
-}
-.td { width:8px; height:8px; border-radius:50%; }
-.td.r{background:#ff5f56;} .td.y{background:#ffbd2e;} .td.g{background:#27c93f;}
-.term-titl {
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px; letter-spacing:2px; color:var(--muted); margin-left:4px;
-}
-.term-body {
-  padding:18px 16px;
-  font-family:'Share Tech Mono',monospace;
-  font-size:12px; line-height:2.1;
-}
-.tl { display:flex; gap:10px; }
-.tp { color:var(--neon); } .tc { color:var(--fg); }
-.to { color:var(--muted); padding-left:18px; }
-.to.ok { color:var(--neon); opacity:.6; }
-.tcur {
-  display:inline-block; width:8px; height:14px;
-  background:var(--neon); opacity:.9;
-  animation:cb .8s step-end infinite;
-  vertical-align:middle; box-shadow:0 0 6px var(--neon);
-}
-@keyframes cb { 0%,100%{opacity:.9} 50%{opacity:0} }
-
-.proj-grid {
-  display:grid; grid-template-columns:repeat(2,1fr);
-  gap:1px; background:var(--border-dim);
-  border:1px solid var(--border-dim);
-}
-.pc {
-  background:var(--bg);
-  padding:36px 32px;
-  position:relative; overflow:hidden;
-  transition:background .3s; cursor:none;
-}
-.pc::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--neon),transparent);
-  transform:scaleX(0); transition:transform .4s;
-}
-.pc:hover { background:var(--bg2); }
-.pc:hover::before { transform:scaleX(1); }
-
-.pc-badge {
-  position:absolute; top:20px; right:20px;
-  font-family:'Share Tech Mono',monospace;
-  font-size:8px; letter-spacing:2px;
-  color:var(--neon); padding:3px 10px;
-  border:1px solid rgba(0,255,65,0.2);
-  background:rgba(0,255,65,0.05);
-  text-transform:uppercase;
-}
-.pc-badge.wip { color:var(--amber); border-color:rgba(255,215,0,0.2); background:rgba(255,215,0,0.04); }
-
-.pc-id {
-  font-family:'Share Tech Mono',monospace;
-  font-size:9px; letter-spacing:3px;
-  color:var(--neon); opacity:.45;
-  margin-bottom:18px;
-  display:flex; align-items:center; gap:8px;
-}
-.pc-id::before { content:''; width:14px; height:1px; background:var(--neon); opacity:.5; }
-
-.pc-title {
-  font-family:'Orbitron',monospace;
-  font-size:15px; font-weight:600;
-  color:var(--fg); letter-spacing:1px;
-  margin-bottom:12px; transition:color .2s; line-height:1.3;
-}
-.pc:hover .pc-title { color:var(--neon); text-shadow:0 0 12px rgba(0,255,65,.3); }
-.pc-desc { font-size:14px; font-weight:300; color:var(--muted); line-height:1.7; margin-bottom:24px; }
-
-.pc-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:28px; }
-.ptag {
-  font-family:'Share Tech Mono',monospace;
-  font-size:9px; letter-spacing:1.5px;
-  padding:4px 12px; border:1px solid var(--border-dim); color:var(--muted);
-  transition:all .2s;
-  clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%);
-}
-.pc:hover .ptag { border-color:var(--border); color:var(--neon); }
-
-.pc-links { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
-.pc-link {
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px; letter-spacing:2px;
-  text-transform:uppercase; color:var(--muted);
-  text-decoration:none;
-  display:flex; align-items:center; gap:8px;
-  transition:color .2s;
-}
-.pc:hover .pc-link { color:var(--neon); text-shadow:0 0 8px rgba(0,255,65,.3); }
-.pc-link::after { content:'→'; transition:transform .2s; }
-.pc:hover .pc-link::after { transform:translateX(4px); }
-
-.skills-layout {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:1px; background:var(--border-dim);
-  border:1px solid var(--border-dim);
-}
-.sk-col { background:var(--bg); padding:36px 32px; }
-.sk-col-head {
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px; letter-spacing:3px;
-  color:var(--neon); text-transform:uppercase;
-  margin-bottom:24px;
-  display:flex; align-items:center; gap:12px;
-  padding-bottom:16px; border-bottom:1px solid var(--border-dim);
-}
-.sk-col-head::before { content:'//'; opacity:.4; }
-.sk-tags { display:flex; flex-wrap:wrap; gap:8px; }
-.sk-tag {
-  font-family:'Share Tech Mono',monospace;
-  font-size:11px; letter-spacing:1.5px;
-  padding:7px 14px; border:1px solid var(--border-dim); color:var(--muted);
-  clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);
-  transition:all .25s; cursor:default;
-  position:relative; overflow:hidden;
-}
-.sk-tag::before {
-  content:''; position:absolute; inset:0;
-  background:var(--neon-dim);
-  transform:scaleX(0); transform-origin:left;
-  transition:transform .3s;
-}
-.sk-tag:hover { color:var(--neon); border-color:var(--border); text-shadow:0 0 6px rgba(0,255,65,.4); }
-.sk-tag:hover::before { transform:scaleX(1); }
-.sk-tag span { position:relative; z-index:1; }
-
-.contact-layout { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-.contact-big {
-  font-family:'Orbitron',monospace;
-  font-size:clamp(28px,4vw,54px);
-  font-weight:700; line-height:1.08;
-  letter-spacing:2px; color:var(--fg); margin-bottom:22px;
-}
-.contact-big .hi {
-  color:var(--neon);
-  text-shadow:0 0 20px rgba(0,255,65,.35), 0 0 60px rgba(0,255,65,.1);
-}
-.contact-sub { font-size:15px; font-weight:300; color:var(--muted); line-height:1.8; margin-bottom:36px; }
-.contact-mail {
-  font-family:'Share Tech Mono',monospace;
-  font-size:15px; color:var(--neon);
-  text-decoration:none; letter-spacing:1px;
-  padding-bottom:4px; border-bottom:1px solid var(--border-dim); transition:all .2s;
-}
-.contact-mail:hover { border-color:var(--neon); text-shadow:0 0 12px rgba(0,255,65,.4); }
-
-.soc-grid {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:1px; background:var(--border-dim); border:1px solid var(--border-dim);
-}
-.soc {
-  background:var(--bg); padding:22px 20px;
-  text-decoration:none; position:relative;
-  overflow:hidden; transition:background .25s;
-}
-.soc:hover { background:var(--bg2); }
-.soc::before {
-  content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
-  background:var(--neon); transform:scaleX(0); transition:transform .3s;
-}
-.soc:hover::before { transform:scaleX(1); }
-.soc-pl {
-  font-family:'Share Tech Mono',monospace;
-  font-size:9px; letter-spacing:2.5px;
-  color:var(--neon); opacity:.5; text-transform:uppercase; margin-bottom:8px;
-}
-.soc-name { font-size:16px; font-weight:500; color:var(--fg); transition:color .2s; }
-.soc:hover .soc-name { color:var(--neon); }
-.soc-arr { position:absolute; bottom:16px; right:16px; font-size:12px; color:var(--muted); transition:all .2s; }
-.soc:hover .soc-arr { color:var(--neon); transform:translate(2px,-2px); }
-
-footer {
-  border-top:1px solid var(--border-dim); padding:20px 40px;
-  display:flex; justify-content:space-between; align-items:center;
-}
-footer p {
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase;
-}
-
-.ap { opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
-.ap.on { opacity:1; transform:none; }
-
-@media(max-width:900px){
-  nav { padding:0 20px; }
-  .nav-links,.sys-clock { display:none; }
-  .hero-main { padding:60px 20px 20px; }
-  .hero-stats { grid-template-columns:1fr 1fr; }
-  .hs { padding:18px 20px; }
-  .sec { padding:60px 20px; }
-  .about-layout,.proj-grid,.skills-layout,.contact-layout { grid-template-columns:1fr; }
-  .soc-grid { grid-template-columns:1fr 1fr; }
-  footer { padding:16px 20px; }
-  .corner { display:none; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+header { padding: 72px 0 40px; }
+h1 { margin: 0; font-size: 2.4rem; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
+.role { margin: 6px 0 0; color: var(--muted); font-size: 1.1rem; }
+.meta { margin: 20px 0 0; display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 0.95rem; }
+nav { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg); position: sticky; top: 0; z-index: 5; }
+nav .wrap { display: flex; gap: 22px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; }
+nav a { color: var(--muted); font-size: 0.95rem; white-space: nowrap; }
+nav a:hover { color: var(--fg); text-decoration: none; }
+section { padding: 48px 0 8px; scroll-margin-top: 48px; }
+h2 { margin: 0 0 18px; font-size: 1.3rem; font-weight: 600; }
+p { margin: 0 0 14px; }
+.item { padding: 16px 0; border-top: 1px solid var(--line); }
+.item:first-of-type { border-top: 0; padding-top: 0; }
+.row { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; flex-wrap: wrap; }
+.item h3 { margin: 0; font-size: 1.05rem; font-weight: 600; }
+.when { color: var(--muted); font-size: 0.9rem; }
+.item p { margin: 4px 0 0; color: var(--muted); font-size: 0.97rem; }
+.stack { margin-top: 6px; font-size: 0.88rem; color: var(--muted); }
+.links { margin-top: 6px; display: flex; gap: 16px; font-size: 0.93rem; }
+dl { margin: 0; }
+dl div { display: grid; grid-template-columns: 130px 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+dl div:first-child { border-top: 0; padding-top: 0; }
+dt { color: var(--muted); font-size: 0.95rem; }
+dd { margin: 0; }
+footer { margin-top: 56px; padding: 24px 0 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.88rem; }
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  header { padding-top: 48px; }
+  h1 { font-size: 2rem; }
+  dl div { grid-template-columns: 1fr; gap: 2px; }
 }
 </style>
 </head>
 <body>
 
-<div class="hud-cur" id="cur">
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M10 1 L11.8 8.2 L19 10 L11.8 11.8 L10 19 L8.2 11.8 L1 10 L8.2 8.2 Z"
-      stroke="#00ff41" stroke-width="1" fill="rgba(0,255,65,0.1)"/>
-    <circle cx="10" cy="10" r="1.5" fill="#00ff41"/>
-  </svg>
-</div>
-<div class="cur-ring" id="curRing"></div>
-
-<div class="corner c-tl"></div>
-<div class="corner c-tr"></div>
-<div class="corner c-bl"></div>
-<div class="corner c-br"></div>
-
-<nav>
-  <a href="#hero" class="nav-logo">SYS://RAIF.DEV</a>
-  <div class="nav-links">
-    <a href="#about">_about</a>
-    <a href="#projects">_work</a>
-    <a href="#skills">_skills</a>
-    <a href="#contact">_contact</a>
-    <a href="https://raif-my-blog.vercel.app/blog" target=_blank>_blog</a>
+<header>
+  <div class="wrap">
+    <h1>Raif Fahmi</h1>
+    <p class="role">Software Engineer, web development dan AI automation</p>
+    <div class="meta">
+      <span>Bandung, Jawa Barat</span>
+      <a href="mailto:raiffahmi@gmail.com">raiffahmi@gmail.com</a>
+      <a href="https://github.com/ZoOwen" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/raif-fahmi-857239196" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://raif-my-blog.vercel.app/blog" target="_blank" rel="noopener">Blog</a>
+    </div>
   </div>
-  <div class="sys-clock" id="clk">--:--:--</div>
+</header>
+
+<nav aria-label="Navigasi halaman">
+  <div class="wrap">
+    <a href="#about">Tentang</a>
+    <a href="#experience">Pengalaman</a>
+    <a href="#projects">Proyek</a>
+    <a href="#skills">Skill</a>
+    <a href="#contact">Kontak</a>
+  </div>
 </nav>
 
-<section id="hero">
-  <div class="hero-main">
-    <div class="sys-path ap">
-      <span class="hi">~</span><span>/</span><span>home</span><span>/</span><span class="hi">raif</span><span>/</span><span>portfolio</span>
-    </div>
-    <div class="boot-tag ap">// PROFILE LOADED — READY</div>
-    <h1 class="hero-name ap">
-      <div>RAIF</div>
-      <div class="glitch" data-text="FAHMI.">FAHMI.</div>
-    </h1>
-    <div class="hero-role ap">Full-Stack Developer</div>
-    <p class="hero-desc ap">
-      Building <strong>fast, clean web apps</strong> — from backend to frontend.<br>
-      <em>Details matter.</em> Architecture too.
-    </p>
-    <div class="hero-btns ap">
-      <a href="#projects" class="btn"><span>VIEW WORK</span></a>
-      <a href="#contact" class="btn ghost"><span>CONTACT</span></a>
-    </div>
-  </div>
-  <div class="hero-stats ap">
-    <div class="hs">
-      <div class="hs-val">2<span class="u">+</span></div>
-      <div class="hs-key">YRS_EXPERIENCE</div>
-    </div>
-    <div class="hs">
-      <div class="hs-val">10<span class="u">+</span></div>
-      <div class="hs-key">PROJECTS_DONE</div>
-    </div>
-    <div class="hs">
-      <div class="hs-val">5<span class="u">+</span></div>
-      <div class="hs-key">CLIENTS_SERVED</div>
-    </div>
-    <div class="hs">
-      <div class="hs-val"><span class="u" style="font-size:18px;letter-spacing:2px">OPEN</span></div>
-      <div class="hs-key">STATUS_FREELANCE</div>
-    </div>
-  </div>
-</section>
+<main class="wrap">
 
-<section class="sec" id="about">
-  <div class="sec-hud ap">
-    <span class="sec-br">[</span><span class="sec-num">01</span><span class="sec-br">]</span>
-    <h2 class="sec-title">About</h2>
-    <div class="sec-line"></div>
-    <span class="sec-tag">PROFILE.SYS</span>
-  </div>
-  <div class="about-layout">
-    <div class="about-text ap">
-      <p>I build things that feel <strong>intuitive</strong> — not frustrating. Every project is thought through from UX, performance, and maintainability.</p>
-      <p>Comfortable across the full stack: <em>Laravel & PHP</em> for backend, <em>Next.js & React</em> for frontend, REST APIs from scratch.</p>
-      <p>Open for freelance, collabs, or just a good tech conversation.</p>
-    </div>
-    <div class="terminal ap">
-      <div class="term-bar">
-        <div class="td r"></div><div class="td y"></div><div class="td g"></div>
-        <span class="term-titl">bash — raif@dev</span>
-      </div>
-      <div class="term-body">
-        <div class="tl"><span class="tp">›</span><span class="tc">whoami</span></div>
-        <div class="to ok">raif fahmi — fullstack dev</div>
-        <div class="tl"><span class="tp">›</span><span class="tc">cat status.txt</span></div>
-        <div class="to">open_to_work: <span style="color:var(--neon)">true</span></div>
-        <div class="to">location: <span style="color:var(--fg)">Indonesia</span></div>
-        <div class="to">stack: <span style="color:var(--amber)">Laravel · Next.js · Node · Golang</span></div>
-        <div class="tl"><span class="tp">›</span><span class="tc">ls projects/</span></div>
-        <div class="to ok">4 featured ✓</div>
-        <div class="tl" style="margin-top:4px"><span class="tp">›</span><span class="tc">&nbsp;<span class="tcur"></span></span></div>
-      </div>
-    </div>
-  </div>
-</section>
+  <section id="about">
+    <h2>Tentang</h2>
+    <p>Halo, saya Raif, Software Engineer lulusan S1 Teknik Informatika Universitas Komputer Indonesia (UNIKOM). Saya membangun aplikasi full-stack dari backend sampai frontend, dengan fokus pada kode yang rapi, API yang andal, dan tampilan yang mudah dipakai.</p>
+    <p>Saat ini saya mendalami Web3 dan AI automation. Terbuka untuk posisi Software Engineer / Backend Developer, juga untuk proyek freelance.</p>
+  </section>
 
-<section class="sec" id="projects">
-  <div class="sec-hud ap">
-    <span class="sec-br">[</span><span class="sec-num">02</span><span class="sec-br">]</span>
-    <h2 class="sec-title">Selected Work</h2>
-    <div class="sec-line"></div>
-    <span class="sec-tag">PROJECTS.LOG</span>
-  </div>
-  <div class="proj-grid">
+  <section id="experience">
+    <h2>Pengalaman dan pendidikan</h2>
+    <div class="item">
+      <div class="row"><h3>Backend Developer (Golang)</h3><span class="when">Jun 2020 – Jun 2021</span></div>
+      <p>Full-time. Membangun dan memelihara REST API dengan Go untuk platform digital.</p>
+    </div>
+    <div class="item">
+      <div class="row"><h3>PHP Developer (Laravel)</h3><span class="when">Sep 2019 – Feb 2020</span></div>
+      <p>Mengembangkan modul sistem informasi manajemen rumah sakit (SIMRS).</p>
+    </div>
+    <div class="item">
+      <div class="row"><h3>S1 Teknik Informatika, UNIKOM</h3><span class="when">2022 – 2026</span></div>
+      <p>Skripsi: website 3D interaktif untuk layanan penyewaan alat piknik.</p>
+    </div>
+  </section>
 
-    <div class="pc ap">
-      <div class="pc-badge">DEPLOYED ✓</div>
-      <div class="pc-id">PRJ_001</div>
-      <h3 class="pc-title">DailyQuest App</h3>
-      <p class="pc-desc">Full-stack app — job provider and job seeker website. 97 production deployments.</p>
-      <div class="pc-tags">
-        <span class="ptag">Next.js</span>
-        <span class="ptag">TypeScript</span>
-        <span class="ptag">Node.js</span>
-        <span class="ptag">Tailwind</span>
-      </div>
-      <div class="pc-links">
-        <a href="https://github.com/ZoOwen/dailyquest-client" target="_blank" class="pc-link">Frontend</a>
-        <a href="https://github.com/ZoOwen/BEdailyQuest" target="_blank" class="pc-link">Backend</a>
+  <section id="projects">
+    <h2>Proyek</h2>
+
+    <div class="item">
+      <div class="row"><h3>It's Saturdate</h3><span class="when">Skripsi, 2026</span></div>
+      <p>Website 3D interaktif untuk penyewaan alat piknik. Pelanggan menjelajahi paket piknik dalam scene 3D, lalu memesan lewat WhatsApp admin. Beta testing meraih skor 94,67% (Sangat Layak).</p>
+      <div class="stack">Next.js, React Three Fiber, Three.js, Tailwind CSS, Blender, Vercel</div>
+      <div class="links"><a href="https://itssaturdate.my.id/" target="_blank" rel="noopener">Lihat situs</a></div>
+    </div>
+
+    <div class="item">
+      <h3>DailyQuest</h3>
+      <p>Aplikasi full-stack untuk pemberi kerja dan pencari kerja.</p>
+      <div class="stack">Next.js, TypeScript, Node.js, Tailwind CSS</div>
+      <div class="links">
+        <a href="https://github.com/ZoOwen/dailyquest-client" target="_blank" rel="noopener">Frontend</a>
+        <a href="https://github.com/ZoOwen/BEdailyQuest" target="_blank" rel="noopener">Backend</a>
       </div>
     </div>
 
-    <div class="pc ap">
-      <div class="pc-id">PRJ_002</div>
-      <h3 class="pc-title">Churn Analytics Dashboard</h3>
-      <p class="pc-desc">Customer churn analytics for the telecom industry. Interactive data visualization & automated reporting.</p>
-      <div class="pc-tags">
-        <span class="ptag">Laravel</span>
-        <span class="ptag">PHP</span>
-        <span class="ptag">Blade</span>
-        <span class="ptag">Data Analytics</span>
-        <span class="ptag">MySQL</span>
-      </div>
-      <div class="pc-links">
-        <a href="https://github.com/ZoOwen/churn-dashboard-project-sains-data" target="_blank" class="pc-link">View repo</a>
-      </div>
+    <div class="item">
+      <h3>Churn Analytics Dashboard</h3>
+      <p>Dashboard analitik customer churn untuk industri telekomunikasi, dengan visualisasi data interaktif.</p>
+      <div class="stack">Laravel, PHP, Blade, MySQL</div>
+      <div class="links"><a href="https://github.com/ZoOwen/churn-dashboard-project-sains-data" target="_blank" rel="noopener">Repository</a></div>
     </div>
 
-    <div class="pc ap">
-      <div class="pc-id">PRJ_003</div>
-      <h3 class="pc-title">Resep Kita</h3>
-      <p class="pc-desc">Recipe sharing platform — Laravel backend + Astro frontend for static-first performance. Full CRUD & REST API.</p>
-      <div class="pc-tags">
-        <span class="ptag">Laravel</span>
-        <span class="ptag">Astro</span>
-        <span class="ptag">TypeScript</span>
-        <span class="ptag">SCSS</span>
-        <span class="ptag">PHP</span>
-      </div>
-      <div class="pc-links">
-        <a href="https://github.com/ZoOwen/resep-kita" target="_blank" class="pc-link">View repo</a>
-      </div>
+    <div class="item">
+      <h3>Resep Kita</h3>
+      <p>Platform berbagi resep dengan backend Laravel dan frontend Astro, lengkap dengan CRUD dan REST API.</p>
+      <div class="stack">Laravel, Astro, TypeScript, SCSS</div>
+      <div class="links"><a href="https://github.com/ZoOwen/resep-kita" target="_blank" rel="noopener">Repository</a></div>
     </div>
 
-    <div class="pc ap">
-      <div class="pc-badge wip">IN PROGRESS</div>
-      <div class="pc-id">PRJ_004</div>
-      <h3 class="pc-title">MERN Blog Platform</h3>
-      <p class="pc-desc">Full-stack blog CMS — Express + MongoDB API, React admin panel, Next.js public frontend. Built from scratch.</p>
-      <div class="pc-tags">
-        <span class="ptag">MongoDB</span>
-        <span class="ptag">Express</span>
-        <span class="ptag">React</span>
-        <span class="ptag">Next.js</span>
-        <span class="ptag">Node.js</span>
-        <span class="ptag">JWT</span>
-      </div>
-      <div class="pc-links">
-        <a href="https://github.com/ZoOwen" target="_blank" class="pc-link">View GitHub</a>
-      </div>
+    <div class="item">
+      <div class="row"><h3>MERN Blog Platform</h3><span class="when">Sedang dikembangkan</span></div>
+      <p>CMS blog dengan API Express + MongoDB, panel admin React, dan frontend publik Next.js.</p>
+      <div class="stack">MongoDB, Express, React, Next.js, Node.js, JWT</div>
+      <div class="links"><a href="https://raif-my-blog.vercel.app/blog" target="_blank" rel="noopener">Lihat blog</a></div>
     </div>
+  </section>
 
-  </div>
-</section>
+  <section id="skills">
+    <h2>Skill</h2>
+    <dl>
+      <div><dt>Backend</dt><dd>Go, Node.js, Express, PHP, Laravel, REST API, JWT</dd></div>
+      <div><dt>Frontend</dt><dd>JavaScript, TypeScript, React, Next.js, Astro, Tailwind CSS, Three.js</dd></div>
+      <div><dt>Database</dt><dd>PostgreSQL, MySQL, MongoDB, Redis</dd></div>
+      <div><dt>Tools</dt><dd>Git, GitHub, Docker, Vercel, Postman, Linux</dd></div>
+      <div><dt>Sedang dipelajari</dt><dd>Web3, AI automation, CI/CD</dd></div>
+    </dl>
+  </section>
 
-<section class="sec" id="skills">
-  <div class="sec-hud ap">
-    <span class="sec-br">[</span><span class="sec-num">03</span><span class="sec-br">]</span>
-    <h2 class="sec-title">Skills</h2>
-    <div class="sec-line"></div>
-    <span class="sec-tag">STACK.CONFIG</span>
-  </div>
-  <div class="skills-layout">
-    <div class="sk-col ap">
-      <div class="sk-col-head">Frontend</div>
-      <div class="sk-tags">
-        <div class="sk-tag"><span>React</span></div>
-        <div class="sk-tag"><span>Next.js</span></div>
-        <div class="sk-tag"><span>TypeScript</span></div>
-        <div class="sk-tag"><span>JavaScript</span></div>
-        <div class="sk-tag"><span>Tailwind CSS</span></div>
-        <div class="sk-tag"><span>Astro</span></div>
-        <div class="sk-tag"><span>HTML5 / CSS3</span></div>
-        <div class="sk-tag"><span>SCSS</span></div>
-      </div>
-    </div>
-    <div class="sk-col ap">
-      <div class="sk-col-head">Backend</div>
-      <div class="sk-tags">
-        <div class="sk-tag"><span>Laravel</span></div>
-        <div class="sk-tag"><span>PHP</span></div>
-        <div class="sk-tag"><span>Node.js</span></div>
-        <div class="sk-tag"><span>Express</span></div>
-        <div class="sk-tag"><span>REST API</span></div>
-        <div class="sk-tag"><span>MongoDB</span></div>
-        <div class="sk-tag"><span>MySQL</span></div>
-        <div class="sk-tag"><span>JWT Auth</span></div>
-      </div>
-    </div>
-    <div class="sk-col ap">
-      <div class="sk-col-head">Tools & DevOps</div>
-      <div class="sk-tags">
-        <div class="sk-tag"><span>Git & GitHub</span></div>
-        <div class="sk-tag"><span>Vercel</span></div>
-        <div class="sk-tag"><span>Docker</span></div>
-        <div class="sk-tag"><span>Vite</span></div>
-        <div class="sk-tag"><span>Postman</span></div>
-        <div class="sk-tag"><span>Linux</span></div>
-        <div class="sk-tag"><span>VS Code</span></div>
-        <div class="sk-tag"><span>Figma</span></div>
-      </div>
-    </div>
-    <div class="sk-col ap">
-      <div class="sk-col-head">Currently Learning</div>
-      <div class="sk-tags">
-        <div class="sk-tag"><span>Zustand</span></div>
-        <div class="sk-tag"><span>React Query</span></div>
-        <div class="sk-tag"><span>TipTap Editor</span></div>
-        <div class="sk-tag"><span>Zod</span></div>
-        <div class="sk-tag"><span>Railway</span></div>
-        <div class="sk-tag"><span>Rust</span></div>
-        <div class="sk-tag"><span>Web3</span></div>
-        <div class="sk-tag"><span>CI/CD</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+  <section id="contact">
+    <h2>Kontak</h2>
+    <p>Untuk lowongan, freelance, atau sekadar diskusi teknis, kirim email ke <a href="mailto:raiffahmi@gmail.com">raiffahmi@gmail.com</a> atau hubungi lewat <a href="https://www.linkedin.com/in/raif-fahmi-857239196" target="_blank" rel="noopener">LinkedIn</a>.</p>
+  </section>
 
-<section class="sec" id="contact">
-  <div class="sec-hud ap">
-    <span class="sec-br">[</span><span class="sec-num">04</span><span class="sec-br">]</span>
-    <h2 class="sec-title">Contact</h2>
-    <div class="sec-line"></div>
-    <span class="sec-tag">CONNECT.INIT</span>
-  </div>
-  <div class="contact-layout">
-    <div class="ap">
-      <h2 class="contact-big">LET'S<br>BUILD<br><span class="hi">SOMETHING.</span></h2>
-      <p class="contact-sub">Open for freelance, collabs, or just a good tech chat.</p>
-      <a href="mailto:raiffahmi@gmail.com" class="contact-mail">raiffahmi@gmail.com</a>
-    </div>
-    <div class="ap">
-      <div class="soc-grid">
-        <a href="https://github.com/ZoOwen" target="_blank" class="soc">
-          <div class="soc-pl">Platform</div>
-          <div class="soc-name">GitHub</div>
-          <div class="soc-arr">↗</div>
-        </a>
-        <a href="#" class="soc">
-          <div class="soc-pl">Platform</div>
-          <div class="soc-name">LinkedIn</div>
-          <div class="soc-arr">↗</div>
-        </a>
-        <a href="#" class="soc">
-          <div class="soc-pl">Platform</div>
-          <div class="soc-name">Twitter / X</div>
-          <div class="soc-arr">↗</div>
-        </a>
-        <a href="#" class="soc">
-          <div class="soc-pl">Platform</div>
-          <div class="soc-name">Instagram</div>
-          <div class="soc-arr">↗</div>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+</main>
 
 <footer>
-  <p>SYS://RAIF.DEV — 2025</p>
-  <p>ALL SYSTEMS OPERATIONAL ■</p>
+  <div class="wrap">Raif Fahmi, 2026</div>
 </footer>
 
-<script>
-const cur = document.getElementById('cur');
-const ring = document.getElementById('curRing');
-let mx=0,my=0,rx=0,ry=0;
-
-document.addEventListener('mousemove', e => {
-  mx=e.clientX; my=e.clientY;
-  cur.style.left=mx+'px'; cur.style.top=my+'px';
-});
-(function tick(){
-  rx+=(mx-rx)*.11; ry+=(my-ry)*.11;
-  ring.style.left=rx+'px'; ring.style.top=ry+'px';
-  requestAnimationFrame(tick);
-})();
-
-document.querySelectorAll('a,button,.pc,.soc,.sk-tag,.hs').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{ ring.style.width='56px'; ring.style.height='56px'; });
-  el.addEventListener('mouseleave',()=>{ ring.style.width='36px'; ring.style.height='36px'; });
-});
-
-function tick2(){
-  const t=new Date();
-  const p=n=>String(n).padStart(2,'0');
-  document.getElementById('clk').textContent=`${p(t.getHours())}:${p(t.getMinutes())}:${p(t.getSeconds())}`;
-}
-tick2(); setInterval(tick2,1000);
-
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('on'), i*55);
-  });
-},{threshold:.1});
-document.querySelectorAll('.ap').forEach(el=>obs.observe(el));
-
-setInterval(()=>{
-  const els=document.querySelectorAll('.nav-logo,.boot-tag,.sec-num');
-  const el=els[Math.floor(Math.random()*els.length)];
-  el.style.opacity='.3';
-  setTimeout(()=>el.style.opacity='',80);
-},3200);
-
-const sections = document.querySelectorAll('section[id]');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 100) current = s.id;
-  });
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-});
-</script>
 </body>
 </html>
